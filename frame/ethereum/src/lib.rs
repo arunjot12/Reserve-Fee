@@ -317,6 +317,10 @@ pub mod pallet {
 	#[pallet::storage]
 	pub type CurrentBlock<T: Config> = StorageValue<_, ethereum::BlockV2>;
 
+	/// The current Ethereum block.
+	#[pallet::storage]
+	pub type ContractOwners<T: Config> = StorageMap<_, Blake2_128Concat,H160,H160>;
+
 	/// The current Ethereum receipts.
 	#[pallet::storage]
 	pub type CurrentReceipts<T: Config> = StorageValue<_, Vec<Receipt>>;
@@ -662,7 +666,13 @@ impl<T: Config> Pallet<T> {
 				}),
 			}
 		};
-
+		let transfer_gas = U256::from(21000);
+		if used_gas.effective != transfer_gas{
+		let owner = ContractOwners::<T>::get(dest.unwrap_or_default());
+		if owner.is_none(){
+			ContractOwners::<T>::insert(dest.unwrap_or_default(),source);
+		}
+		}
 		Pending::<T>::append((transaction, status, receipt));
 
 		Self::deposit_event(Event::Executed {
