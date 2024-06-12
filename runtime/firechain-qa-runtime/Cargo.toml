@@ -70,8 +70,8 @@ pallet-balances = { workspace = true }
 pallet-bounties = { workspace = true }
 pallet-child-bounties = { workspace = true }
 pallet-collective = { workspace = true }
-pallet-contracts = { workspace = true }
-pallet-contracts-primitives = { workspace = true }
+pallet-contracts = { path="../../frame/contracts",default-features = false}
+pallet-contracts-primitives = { path="../../frame/contracts/primitives",default-features = false }
 pallet-conviction-voting = { workspace = true }
 pallet-core-fellowship = { workspace = true }
 pallet-democracy = { workspace = true }
