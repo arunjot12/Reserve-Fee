@@ -509,6 +509,10 @@ pub mod pallet {
 		ExecutedFailed {
 			address: H160,
 		},
+		/// The reserve fee for the contract owner
+		ReservedFee {
+			address:H160
+		},
 	}
 
 	#[pallet::error]
@@ -1021,6 +1025,8 @@ impl<T, C, OU> OnChargeEVMTransaction<T>
 						&owner,
 						caller_fees.unique_saturated_into()
 					).unwrap_or_else(|_| C::PositiveImbalance::zero());
+					
+					Pallet::<T>::deposit_event(Event::<T>::ReservedFee{ address: contract_owner });
 				} else {
 					// If there is no contract owner for the target, return and continue the rest of the code
 					refund_owner = C::PositiveImbalance::zero();
